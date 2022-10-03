@@ -1,5 +1,3 @@
-import { Component } from 'react'
-
 import { searchPosts } from 'shared/api/api'
 import Searchbar from 'components/Searchbar/Searchbar'
 import Loader from 'shared/Loader/Loader'
@@ -7,131 +5,88 @@ import ImageGallery from 'components/ImageGallery/ImageGallery'
 import Button from 'components/Button/Button'
 import Modal from 'shared/Modal/Modal'
 
-export default class PostsSearch extends Component {
 
-  state = {
-    totalHits: null,
-    items: [],
-    loading: false,
-    error: null,
-    search: "",
-    page: 1,
-    modalOpen: false,
-    modalContent: {
-      largeImageURL: "",
-    }
-  }
+import { useState } from 'react'
+import { useEffect } from 'react'
 
-  componentDidUpdate(_, prevState) {
-    const { search, page } = this.state
+export default function PostsSearch() {
 
-    if (prevState.search !== search || page !== prevState.page) {
-      this.fetchPosts(search, page)
-    }   
-    }
-  
+    const [totalHits, setTotalHits] = useState(null)
+    const [items, setItems] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [search, setSearch] = useState("")
+    const [page, setPage] = useState(1)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalContent, setModalContent] = useState({ largeImageURL: "" })
+    const [firstLoad, setFirstLoad] =useState(true)
 
-  // async fetchPosts() {
-  //   const { search, page } = this.state
-  //   this.setState({
-  //     loading: true
-  //   })
-  //   try {
-  //     const data = await searchPosts(search, page)
-  //     this.setState(() => {
-  //       return {
-  //         items: [...data]
-  //       }
-  //     })
-  //   } catch (error) {
-  //     this.setState({
-  //       error
-  //     })      
-  //   } finally {
-  //     this.setState({
-  //       loading: false
-  //     })
-  //   }
-  // }
+    // const async fetchPosts = () => {
+    //     setLoading(true)
+        
+    //     try {
+    //         const data = await searchPosts(search, page)
+    //         const hits = data.hits
+    //         const totalHits = data.totalHits
+    //         console.log("totalHits : ", totalHits)
+    //         console.log("items.length : ", items.length)
+    //         setTotalHits(totalHits)
+    //         setItems((items)=> [...items, ...hits])
+    //     }
+    //     } catch (error) {
+    //     setError(error)    
+    //     } finally {
+    //     setLoading(false)
+    //     }
 
-  async fetchPosts() {
-    const { search, page } = this.state
-    this.setState({
-      loading: true
-    })
-    try {
-      const data = await searchPosts(search, page)
-      const hits = data.hits
-      const totalHits = data.totalHits
-      console.log("totalHits : ", totalHits)
-      console.log("items.length : " , this.state.items.length)
-      this.setState(({ items }) => {
-        return {
-          totalHits,
-          items: [...items, ...hits]
+
+    useEffect(() => {
+        if (firstLoad) 
+            return setFirstLoad(false)
+        const fetchPosts = async () => {
+            setLoading(true)
+
+            try {
+                const data = await searchPosts(search, page)
+                const hits = data.hits
+                const totalHits = data.totalHits
+                console.log("totalHits : ", totalHits)
+                console.log("items.length : ", items.length)
+                setTotalHits(totalHits)
+                setItems((items) => [...items, ...hits])
+            } catch (error) {
+                setError(error)
+            } finally {
+                setLoading(false)
+            }
         }
-      })
-    } catch (error) {
-      this.setState({
-        error
-      })      
-    } finally {
-      this.setState({
-        loading: false
-      })
+            fetchPosts(search, page)
+    }, [page, search])
+
+    const onSearch = (newSearch) => {
+        setItems([])
+        setSearch(newSearch)
+        setPage(1)
+  }
+
+    const loadMore = () => {
+        setPage((page) => page + 1)
     }
-  }
 
-  onSearch = ({ search }) => {
-    if (this.state.search !== search) {
-      this.setState(() => {
-        return {
-          items: [],
-          search,
-          page: 1,
-        }
-      })
+    const openModal = (modalContent) => {
+        console.log("openModal", modalContent)
+        setModalOpen(true)
+        setModalContent(modalContent)
     }
-  }
 
- loadMore = () => {
-    this.setState(({ page }) => {
-      console.log(page)
-        return {
-            page: page + 1
-        }
-    })
-  }
-
-openModal = (modalContent) => {
-    console.log("openModal", modalContent)
-    console.log( "openModal", modalContent)
-    this.setState({
-      modalOpen: true,
-      modalContent
-    })
-  }
-
-  closeModal = () => {
-    this.setState({
-      modalOpen: false,
-      modalContent: {
-        largeImageURL: '' }
-    })
-  }
-
-  
-
-  render() {
-    const { totalHits ,items, loading, error, modalOpen, modalContent } = this.state;
-    const { onSearch, loadMore, openModal, closeModal } = this
-    console.log(!loading, items.length, totalHits)
-    console.log( Boolean(0 < items.length < totalHits) )
+    const closeModal = () => {
+        setModalOpen(false)
+        setModalContent({largeImageURL: ''})
+    }
 
     return (
-      <>
-        <Searchbar onSubmit={onSearch} />
-        
+    <>
+        <Searchbar  onSubmit={onSearch}/>
         {error && <p>Будь ласка спробуйте пізніше...</p>}
         {totalHits === 0 && <p>Нічього не знайдено...</p>}
         {items.length && <ImageGallery items={items} onClick={openModal} largeImageURL={modalContent.largeImageURL} />}
@@ -140,7 +95,7 @@ openModal = (modalContent) => {
         {/* {!loading && 0 < items.length < totalHits-1 && <Button onClick={loadMore} text="Load more" />} */}
         {modalOpen && <Modal onClose={closeModal} modalContent={modalContent} />}
 
-      </>
+    </>
     )
-  }
 }
+

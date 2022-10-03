@@ -21,8 +21,8 @@ export default function Searchbar({onSubmit}) {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log("handleSubmit")
-        onSubmit({ search })
-            console.log(onSubmit)
+        onSubmit( search )
+            console.log(search)
         // this.reset()
     }
   
