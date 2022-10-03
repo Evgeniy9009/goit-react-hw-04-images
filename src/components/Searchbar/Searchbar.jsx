@@ -1,63 +1,51 @@
-import { Component } from 'react'
 import css from 'components/Searchbar/Searchbar.module.css'
 import { ImSearch } from "react-icons/im";
 
 import PropTypes from 'prop-types'
 
+import React from 'react'
+import { useState } from 'react';
 
-export default class Searchbar extends Component {
-  state = {
-    search: ""
-  }
+export default function Searchbar({onSubmit}) {
 
-  handleChange = (e) => {
-    console.log("handleChange")
-    const { name, value } = e.target 
-    this.setState({
-      [name]: value
-    })
-  }
+    const [ search, setSearch] = useState("")
 
-  handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("handleSubmit")
-    const { onSubmit } = this.props
-    onSubmit({ ...this.state })
-        console.log(onSubmit)
-    // this.reset()
-  }
+    const handleChange = (e) => {
+        console.log("handleChange")
+        const { value } = e.target 
+        setSearch(value)
+    }
 
-  // reset() {
-  //   this.setState({
-  //     search: ""
-  //   })
-  // }
 
-  render() {
-    const { search } = this.state
-    const { handleChange, handleSubmit} = this
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log("handleSubmit")
+        onSubmit({ search })
+            console.log(onSubmit)
+        // this.reset()
+    }
+  
     return (
-              // <ImSearch.Provider value={{ style: { width: '24px' }}} >
-      <header className={css.searchbar}>
+
+        <header className={css.searchbar}>
             <form onSubmit={handleSubmit} className={css.form}>
                 <button onClick={handleSubmit} type="submit" className={css.button}>
             <span className={css.buttonLabel}><ImSearch size={24}/></span>
                 </button>
-          <input
+        <input
             onChange={handleChange}
-                  value={search}
-                  className={css.input}
-                  type="text"
-                  name="search"
-                  autoComplete="off"
-                  autoFocus
-                  placeholder="Search images and photos"
+                value={search}
+                className={css.input}
+                type="text"
+                name="search"
+                autoComplete="off"
+                autoFocus
+                placeholder="Search images and photos"
                 />
             </form>
         </header>
-      /* </ImSearch.Provider> */
     )
-  }
 }
 
 Searchbar.propTupes = {

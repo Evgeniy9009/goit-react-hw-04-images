@@ -131,7 +131,6 @@ openModal = (modalContent) => {
     return (
       <>
         <Searchbar onSubmit={onSearch} />
-        {modalOpen && <Modal onClose={closeModal} modalContent={modalContent} />}
         
         {error && <p>Будь ласка спробуйте пізніше...</p>}
         {totalHits === 0 && <p>Нічього не знайдено...</p>}
@@ -139,6 +138,8 @@ openModal = (modalContent) => {
         {loading &&<Loader />} 
         {!loading && 0 < items.length && items.length < totalHits && <Button onClick={loadMore} text="Load more" />}
         {/* {!loading && 0 < items.length < totalHits-1 && <Button onClick={loadMore} text="Load more" />} */}
+        {modalOpen && <Modal onClose={closeModal} modalContent={modalContent} />}
+
       </>
     )
   }

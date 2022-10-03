@@ -11,10 +11,9 @@ export default function Loader() {
             width="180"
             ariaLabel="dna-loading"
             wrapperStyle={{}}
-             wrapperClass="dna-wrapper"
-        />
-        
-  )
+            wrapperClass="dna-wrapper"
+        />  
+    )
 }
 
 
