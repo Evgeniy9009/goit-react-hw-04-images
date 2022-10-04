@@ -19,20 +19,19 @@ export default function PostsSearch() {
     const [page, setPage] = useState(1)
     const [modalOpen, setModalOpen] = useState(false)
     const [modalContent, setModalContent] = useState({ largeImageURL: "" })
-    const [firstLoad, setFirstLoad] =useState(true)
+    // const [firstLoad, setFirstLoad] =useState(true)
 
     useEffect(() => {
-        if (firstLoad) {
-            return setFirstLoad(false)}
+        // if (firstLoad) {
+        //     return setFirstLoad(false)}
+        if (!search) {return}
         const fetchPosts = async () => {
             setLoading(true)
-
             try {
                 const data = await searchPosts(search, page)
                 const hits = data.hits
                 const totalHits = data.totalHits
                 console.log("totalHits : ", totalHits)
-                console.log("items.length : ", items.length)
                 setTotalHits(totalHits)
                 setItems((items) => [...items, ...hits])
             } catch (error) {
@@ -42,7 +41,7 @@ export default function PostsSearch() {
             }
         }
             fetchPosts(search, page)
-    }, [firstLoad, items.length, page, search])
+    }, [page, search])
 
     const onSearch = (newSearch) => {
         setItems([])
