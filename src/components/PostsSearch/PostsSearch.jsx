@@ -22,8 +22,8 @@ export default function PostsSearch() {
     const [firstLoad, setFirstLoad] =useState(true)
 
     useEffect(() => {
-        if (firstLoad) 
-            return setFirstLoad(false)
+        if (firstLoad) {
+            return setFirstLoad(false)}
         const fetchPosts = async () => {
             setLoading(true)
 
