@@ -21,25 +21,6 @@ export default function PostsSearch() {
     const [modalContent, setModalContent] = useState({ largeImageURL: "" })
     const [firstLoad, setFirstLoad] =useState(true)
 
-    // const async fetchPosts = () => {
-    //     setLoading(true)
-        
-    //     try {
-    //         const data = await searchPosts(search, page)
-    //         const hits = data.hits
-    //         const totalHits = data.totalHits
-    //         console.log("totalHits : ", totalHits)
-    //         console.log("items.length : ", items.length)
-    //         setTotalHits(totalHits)
-    //         setItems((items)=> [...items, ...hits])
-    //     }
-    //     } catch (error) {
-    //     setError(error)    
-    //     } finally {
-    //     setLoading(false)
-    //     }
-
-
     useEffect(() => {
         if (firstLoad) 
             return setFirstLoad(false)
@@ -67,7 +48,7 @@ export default function PostsSearch() {
         setItems([])
         setSearch(newSearch)
         setPage(1)
-  }
+    }
 
     const loadMore = () => {
         setPage((page) => page + 1)

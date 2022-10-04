@@ -41,5 +41,3 @@ Modal.propTypes = {
       largeImageURL: PropTypes.string.isRequired
     })
   }
- 
-  

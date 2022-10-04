@@ -25,7 +25,7 @@ export default function Searchbar({onSubmit}) {
             console.log(search)
         // this.reset()
     }
-  
+
     return (
 
         <header className={css.searchbar}>

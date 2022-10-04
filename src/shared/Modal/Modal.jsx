@@ -1,44 +1,49 @@
 import {useEffect} from 'react'
-// import { createPortal } from 'react-dom'
+import { createPortal } from 'react-dom'
 import css from 'shared/Modal/Modal.module.css'
 import PropTypes from 'prop-types'
 
-export default function Modal({onClose, modalContent}) {
+const modalRoot= document.getElementById("modal-root")
 
-    const onClick = useEffect(() => {
+export default function Modal({ onClose, modalContent }) {
 
-        const closeModal = ({ target, currentTarget, code }) => {
-            console.log(target, currentTarget)
-            if (target === currentTarget || code === "Escape") {
+    useEffect(() => {
+        
+        const handleEscClick = (e) => {
+            if (e.code === "Escape") {
                 onClose()
             }
         }
-        console.log("addEventListener")
-        document.addEventListener("keydown", closeModal)
+            window.addEventListener("keydown", handleEscClick)
 
-        return () => {
-            console.log("removeEventListener")
-            document.removeEventListener("keydown" , closeModal)
+            return () => {
+                console.log("removeEventListener")
+                document.removeEventListener("keydown", handleEscClick)
         }
-    }, [onClose])
+        }, [onClose]
+    )
 
-
+    const handleOverlayClick = (e) => {
+            if (e.target === e.currentTarget) {
+                onClose()
+            }
+    }
+    
+        
     const { largeImageURL } = modalContent
     
-    return (
-    //   onClick={closeModal}
-    <div className={css.overlay} onClick={onClick}>
-        <div className={css.modal}>
-            <img src={largeImageURL} alt="" />
-        </div>
-    </div>
+    return createPortal(
+        <div className={css.overlay} onClick={handleOverlayClick}>
+            <div className={css.modal}>
+                <img src={largeImageURL} alt="" />
+            </div>
+        </div>, modalRoot
     )
 }
 
 Modal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  modalContent: PropTypes.shape({
-      largeImageURL: PropTypes.string.isRequired
+    onClose: PropTypes.func.isRequired,
+    modalContent: PropTypes.shape({
+        largeImageURL: PropTypes.string.isRequired
     })
-  }
- 
+}
