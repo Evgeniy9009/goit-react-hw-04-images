@@ -42,7 +42,7 @@ export default function PostsSearch() {
             }
         }
             fetchPosts(search, page)
-    }, [page, search])
+    }, [firstLoad, items.length, page, search])
 
     const onSearch = (newSearch) => {
         setItems([])
